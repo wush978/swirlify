@@ -1,0 +1,29 @@
+language: c
+
+sudo: true
+
+addons:
+  apt_packages:
+    - pandoc
+
+script:
+  - Rscript -e "options(swirlify_course_dir_path = 'swirl_course/R_Programming');swirlify::test_course()"
+
+after_failure:
+  - ./travis-tool.sh dump_logs
+
+before_install:
+  - curl -OL http://raw.github.com/craigcitro/r-travis/master/scripts/travis-tool.sh
+  - chmod 755 ./travis-tool.sh
+  - ./travis-tool.sh bootstrap
+
+install:
+  - git clone https://github.com/swirldev/swirl_courses.git swirl_course
+
+env:
+  - global:
+    - WARNINGS_ARE_ERRORS=1
+    - _R_CHECK_FORCE_SUGGESTS_=0
+    - BOOTSTRAP_LATEX=0
+    - R_BUILD_ARGS="--no-manual"
+    - R_CHECK_ARGS="--no-manual --as-cran"
