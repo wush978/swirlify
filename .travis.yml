@@ -13,7 +13,8 @@ before_install:
   - curl -OL http://raw.github.com/craigcitro/r-travis/master/scripts/travis-tool.sh
   - chmod 755 ./travis-tool.sh
   - ./travis-tool.sh bootstrap
-  - Rscript -e "install.packages(c('swirl', 'stringr', 'yaml', 'rmarkdown', 'whisker'), repos = 'http://cran.r-project.org/')"
+  - Rscript -e "install.packages(c('swirl', 'stringr', 'yaml', 'rmarkdown', 'whisker', 'devtools'), repos = 'http://cran.r-project.org/')"
+  - Rscript -e "devtools::install_github('swirldev/swirl')"
   - R CMD INSTALL .
 
 install:
