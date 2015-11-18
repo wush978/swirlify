@@ -15,6 +15,7 @@ before_install:
   - ./travis-tool.sh bootstrap
   - Rscript -e "install.packages(c('swirl', 'stringr', 'yaml', 'rmarkdown', 'whisker', 'devtools'), repos = 'http://cran.r-project.org/')"
   - Rscript -e "devtools::install_github('swirldev/swirl')"
+  - Rscript -e "library(methods)"
   - R CMD INSTALL .
 
 install:
