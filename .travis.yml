@@ -7,7 +7,7 @@ addons:
     - pandoc
 
 script:
-  - Rscript -e "options(swirlify_course_dir_path = 'swirl_course/R_Programming');swirlify::test_course()"
+  - Rscript -e "library(methods);options(swirlify_course_dir_path = 'swirl_course/R_Programming');swirlify::test_course()"
 
 before_install:
   - curl -OL http://raw.github.com/craigcitro/r-travis/master/scripts/travis-tool.sh
