@@ -5,12 +5,13 @@
 #' working directory, then a new course directory will be created. However if
 #' you've already started a course with the name you provide for \code{course_name}
 #' and that course is in your working directory, then a new lesson will be created
-#' inside of that course wit the name you provide for \code{lesson_name}.
+#' inside of that course with the name you provide for \code{lesson_name}.
 #'
 #' @param lesson_name The name of the lesson.
 #' @param course_name The name of the course.
 #' @param open_lesson If \code{TRUE} the new \code{lesson.yaml} file will open
 #' for editing via \code{\link[utils]{file.edit}}. The default value is \code{TRUE}.
+#' @importFrom utils packageVersion
 #' @export
 #' @examples
 #' \dontrun{
@@ -68,119 +69,48 @@ new_lesson <- function(lesson_name, course_name, open_lesson = TRUE) {
                paste("  Version:", packageVersion("swirl"))),
              lesson_file)
   if(open_lesson){
-    file.edit(lesson_file)
+    file_edit(lesson_file)
   }
   message("If the lesson file doesn't open automatically, you can open it now to begin editing...")
   # Set options
   set_swirlify_options(lesson_file)
 }
 
-#' List of available functions
-#'
-#' @export
-#' @examples
-#' \dontrun{
-#' swirlify_help()
-#' }
-swirlify_help <- function(){
-  utils <-
-    c("new_lesson(lesson_name, course_name) -- Create a new lesson.",
-      "set_lesson(path_to_yaml) -- Select an existing lesson you want to
-      work on. Omit path_to_yaml argument to select file interactively.",
-      "get_lesson() -- See what lesson you are currently working on.",
-      "demo_lesson() -- Demo current lesson from the beginning in swirl.",
-      "demo_lesson(from) or demo_lesson(from, to) -- See ?demo_lesson.",
-      "count_questions() -- Count the number of questions in current lesson.",
-      "find_questions(regex) -- Get question numbers for questions matching regex.",
-      "add_to_manifest() -- Add current lesson to course manifest.",
-      "test_lesson() -- Run comprehensive tests on the current lesson.",
-      "test_course() -- Run comprehensive tests on the current course.")
-  rule("Utilities")
-  message(paste0(" * ", utils, collapse="\n"))
-  questions <-
-    c("wq_message() -- Just text output, no question.",
-      "wq_command() -- Command line question.",
-      "wq_multiple() -- Multiple choice question.",
-      "wq_script() -- Question requiring submission of an R script.",
-      "wq_numerical() -- Question requiring exact numerical answer.",
-      "wq_text() -- Question requiring a short text answer.",
-      "wq_figure() -- Display a figure in the plotting window.",
-      "wq_video() -- Open a link to a video on a webpage.")
-  rule("Append question")
-  message(paste0(" * ", questions, collapse="\n"))
-  invisible()
-}
-
-#' Demo the current lesson in swirl
-#'
-#' @param from Question number to begin with. Defaults to beginning of lesson.
-#' @param to Question number to end with. Defaults to end of lesson.
-#' @importFrom yaml yaml.load_file
-#' @importFrom stringr str_detect str_extract
-#' @importFrom swirl swirl
-#' @export
-#' @examples
-#' \dontrun{
-#' # Demo current lesson from beginning through the end
-#' demo_lesson()
-#' # Demo current lesson from question 5 through the end
-#' demo_lesson(5)
-#' # Demo current lesson from question 8 through question 14
-#' demo_lesson(8, 14)
-#' }
-demo_lesson <- function(from=NULL, to=NULL) {
-  # Check that we're working on a lesson
-  lesson_file_check()
-  # If yaml.load_file fails, provide more helpful feedback
-  handle_err <- function(err) {
-    # Intercept error message
-    err_mes <- err$message
-    # Check if its about 'mapping values', e.g. `:`
-    if(str_detect(err_mes, "mapping values")) {
-      # Get line and column numbers
-      place <- str_extract(err_mes, "line [0-9]+, column [0-9]+$")
-      err_mes <- paste0("It seems you're using a special character (maybe a colon?) at ",
-                        place,
-                        ". If so, you should put double quotes around the entire block of text."
-      )
-    }
-    if(str_detect(err_mes, "expected key")) {
-      # Get line and column numbers
-      place <- str_extract(err_mes, "line [0-9]+, column [0-9]+$")
-      err_mes <- paste0("It appears that you might have an issue with quotes around ",
-                        place,
-                        ". If so, you should make sure that all of your double and single quotes match up okay."
-      )
-    }
-    stop(err_mes)
-  }
-  # Try reading the lesson in using yaml.load_file
-  lesson_path <- getOption("swirlify_lesson_file_path")
-  temp <- tryCatch(yaml.load_file(lesson_path),
-                   error = handle_err
-                   )
-  # Check that there's something there besides the meta
-  if(length(temp) <= 1) stop("There's nothing to test yet!")
-  # Check that if MANIFEST exists, lesson is listed
-  path2man <- file.path(getOption("swirlify_course_dir_path"), "MANIFEST")
-  if(file.exists(path2man)) {
-    manifest <- readLines(path2man, warn=FALSE)
-    if(!(getOption('swirlify_lesson_dir_name') %in% manifest)) {
-      stop("Please add '", getOption('swirlify_lesson_dir_name'),
-           "' to the MANIFEST file in your course directory!")
-    }
-  }
-  # Install course
-  install_course_directory(getOption("swirlify_course_dir_path"))
-  # Run lesson in "test" mode
-  suppressPackageStartupMessages(
-    swirl("test",
-          test_course=getOption("swirlify_course_name"),
-          test_lesson=getOption("swirlify_lesson_name"),
-          from=from,
-          to=to))
-  invisible()
-}
+# #' List of available functions
+# #'
+# #' @export
+# #' @examples
+# #' \dontrun{
+# #' swirlify_help()
+# #' }
+# swirlify_help <- function(){
+#   utils <-
+#     c("new_lesson(lesson_name, course_name) -- Create a new lesson.",
+#       "set_lesson(path_to_yaml) -- Select an existing lesson you want to
+#       work on. Omit path_to_yaml argument to select file interactively.",
+#       "get_lesson() -- See what lesson you are currently working on.",
+#       "demo_lesson() -- Demo current lesson from the beginning in swirl.",
+#       "demo_lesson(from) or demo_lesson(from, to) -- See ?demo_lesson.",
+#       "count_questions() -- Count the number of questions in current lesson.",
+#       "find_questions(regex) -- Get question numbers for questions matching regex.",
+#       "add_to_manifest() -- Add current lesson to course manifest.",
+#       "test_lesson() -- Run comprehensive tests on the current lesson.",
+#       "test_course() -- Run comprehensive tests on the current course.")
+#   rule("Utilities")
+#   message(paste0(" * ", utils, collapse="\n"))
+#   questions <-
+#     c("wq_message() -- Just text output, no question.",
+#       "wq_command() -- Command line question.",
+#       "wq_multiple() -- Multiple choice question.",
+#       "wq_script() -- Question requiring submission of an R script.",
+#       "wq_numerical() -- Question requiring exact numerical answer.",
+#       "wq_text() -- Question requiring a short text answer.",
+#       "wq_figure() -- Display a figure in the plotting window.",
+#       "wq_video() -- Open a link to a video on a webpage.")
+#   rule("Append question")
+#   message(paste0(" * ", questions, collapse="\n"))
+#   invisible()
+# }
 
 #' Template for output without a question
 #'
@@ -467,7 +397,10 @@ wq_text <- function(output = "explain the question here",
   invisible()
 }
 
-#' Select an existing lesson you want to work on
+#' Select an existing lesson to work on
+#' 
+#' Choose a lesson to work on with swirlify by specifying the path to the
+#' \code{lesson.yaml} file or interactively choose a lesson file.
 #'
 #' @param path_to_yaml Optional, full path to YAML lesson file. If not
 #' specified, then you will be prompted to select file interactively.
@@ -499,12 +432,14 @@ set_lesson <- function(path_to_yaml = NULL, open_lesson = TRUE,
     message("\nIf the lesson file doesn't open automatically, you can open it now to begin editing...\n")
   }
   if(open_lesson) {
-    file.edit(getOption("swirlify_lesson_file_path"))
+    file_edit(getOption("swirlify_lesson_file_path"))
   }
   invisible()
 }
 
 #' See what lesson you are currently working on
+#' 
+#' Prints the current lesson and course that you are working on to the console
 #'
 #' @export
 #' @examples
@@ -523,8 +458,11 @@ get_current_lesson <- function() {
 }
 
 #' Count number of questions in current lesson
+#' 
+#' Returns and prints the number of questions in the current lesson.
 #'
 #' @importFrom yaml yaml.load_file
+#' @return Number of questions as an integer, invisibly
 #' @export
 #' @examples
 #' \dontrun{
@@ -534,6 +472,7 @@ count_questions <- function() {
   lesson_file_check()
   les <- yaml.load_file(getOption('swirlify_lesson_file_path'))
   message("Current lesson has ", length(les) - 1, " questions")
+  invisible(length(les) - 1)
 }
 
 # Count number of units in current lesson
@@ -554,6 +493,7 @@ count_questions <- function() {
 #' @param regex The regular expression to look for in the lesson.
 #' This gets passed along to \code{stringr::str_detect}, so the
 #' same rules apply. See \code{\link[stringr]{str_detect}}.
+#' @return A vector of integers representing question numbers.
 #' @export
 #' @examples
 #' \dontrun{
@@ -625,7 +565,8 @@ append_empty_line <- function(lesson_file_path) {
 #'
 #' The MANIFEST file located in the course directory allows you to specify
 #' the order in which you'd like the lessons to be listed in swirl. If the
-#' MANIFEST file does not exist, lessons are listed alphabetically.
+#' MANIFEST file does not exist, lessons are listed alphabetically. Invisibly
+#' returns the path to the MANIFEST file.
 #'
 #' @return MANIFEST file path, invisibly
 #' @importFrom stringr str_detect
@@ -638,8 +579,16 @@ append_empty_line <- function(lesson_file_path) {
 #' }
 add_to_manifest <- function() {
   lesson_file_check()
-  man_path <- find_manifest()
+  
+  course_dir_path <- getOption("swirlify_course_dir_path")
   lesson_dir_name <- getOption("swirlify_lesson_dir_name")
+  man_path <- file.path(course_dir_path, "MANIFEST")
+  if(!file.exists(man_path)){
+    cat(lesson_dir_name, "\n", file = man_path, append = TRUE)
+    ensure_file_ends_with_newline(man_path)
+    return(invisible(man_path))
+  }
+  
   # See if it's already listed
   man_contents <- readLines(man_path, warn = FALSE)
   found <- str_detect(man_contents, lesson_dir_name)
@@ -647,26 +596,40 @@ add_to_manifest <- function() {
     message("\nLesson '", lesson_dir_name, "' already listed in the course manifest!\n")
     return(invisible(man_path))
   }
+  
   # Make sure file ends with blank line
-  if(!ends_with_newline(man_path)) {
-    cat("\n", file = man_path, append = TRUE)
-  }
   cat(lesson_dir_name, "\n", file = man_path, append = TRUE)
+  ensure_file_ends_with_newline(man_path)
   invisible(man_path)
 }
 
-# Find the location of the MANIFEST file
-find_manifest <- function() {
-  course_dir_path <- getOption("swirlify_course_dir_path")
-  man_path <- file.path(course_dir_path, "MANIFEST")
-  if(!file.exists(man_path)) {
-    message("\nMANIFEST file does not exist yet. Creating it now.")
+ensure_file_ends_with_newline <- function(path){
+  if(!ends_with_newline(path)) {
+    cat("\n", file = path, append = TRUE)
   }
-  man_path
 }
 
-# Borrowed from hadley/devtools
-rule <- function(title = "") {
-  width <- getOption("width") - nchar(title) - 1
-  message("\n", title, paste(rep("-", width, collapse = "")), "\n")
+#' @importFrom whisker whisker.render
+#' @importFrom utils file.edit
+file_edit <- function(path){
+  if(Sys.getenv("RSTUDIO") == "1"){
+    message("\n##### Edit lesson file with: file.edit(lp()) #####\n")
+  } else {
+    file.edit(path)
+  }
+}
+
+#' Get lesson path
+#' 
+#' Find the path to the \code{lesson.yaml} file you're working on.
+#' 
+#' @return A string, the path to the current \code{lesson.yaml} file.
+#' @export
+#' @examples 
+#' \dontrun{
+#' lp()
+#' }
+lp <- function() {
+  lesson_file_check()
+  getOption("swirlify_lesson_file_path")
 }

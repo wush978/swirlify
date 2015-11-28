@@ -27,3 +27,4 @@ env:
     - BOOTSTRAP_LATEX=0
     - R_BUILD_ARGS="--no-manual"
     - R_CHECK_ARGS="--no-manual --as-cran"
+
