@@ -24,5 +24,6 @@ Encoding: UTF-8
 Roxygen: list(wrap = FALSE)
 Suggests:
     testthat,
-    digest
+    digest,
+    git2r
 RoxygenNote: 5.0.1
