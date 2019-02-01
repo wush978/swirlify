@@ -10,10 +10,12 @@ RUN echo "en_US.UTF-8 UTF-8" > /etc/locale.gen && \
   update-locale
   
 ENV LC_ALL=zh_TW.UTF-8
-COPY course /home/jenkins/DataScienceAndR
 RUN useradd -u 110 -ms /bin/bash jenkins
 RUN chown -R jenkins:jenkins /home/jenkins
 USER jenkins
 WORKDIR /home/jenkins
-COPY test-scripts/test.R /home/jenkins/test.R
 VOLUME ["/home/jenkins/R-lib"]
+VOLUME ["/home/jenkins/pvm"]
+VOLUME ["/home/jenkins/swirl"]
+VOLUME ["/home/jenkins/swirlify"]
+VOLUME ["/home/jenkins/course"]
