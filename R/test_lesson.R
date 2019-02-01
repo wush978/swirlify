@@ -410,20 +410,16 @@ test_lesson_by_agent <- function(course.dir, lesson.name, repos = getOption("rep
         correct_script_temp_path <- get_character("swirl:::.get_e()$correct_script_temp_path")
         if (file.exists(correct_script_temp_path)) {
           file.copy(from = correct_script_temp_path, to = script_temp_path, overwrite = TRUE)
-        } else {
+        } else if (!is.null(answer.yaml)) {
           cat(ans[[i]]$CorrectAnswer, sep = "\n", file = script_temp_path, append = FALSE)
         }
         #      enter_process("cat(sprintf('output:%s:', swirl:::.get_e()$script_temp_path))\n")
         enter_process("submit()\n")
       } else if (src[[i]]$Class == "mult_question") {
         wait_until(function(.) any(grepl("Selection:", ., fixed = TRUE)), check.last = TRUE)
-        ans <- src[[i]]$CorrectAnswer %>% as.character()
-        # . <- search_output(function(.) any(grepl("Selection:", ., fixed = TRUE))) %>%
-        #   max()
-        # . <- search_selection(p.buf$output[[.]]$stdout, ans)
         . <- search_output(function(.) any(grepl("Selection:", ., fixed = TRUE))) %>%
           max() %>%
-          search_selection_from_p.buf(TRUE, ans) %>%
+          search_selection_from_p.buf(TRUE, src[[i]]$CorrectAnswer %>% as.character()) %>%
           enter_process(breakline = TRUE)
       } else {
         browser()
