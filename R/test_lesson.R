@@ -291,10 +291,10 @@ test_lesson_by_agent <- function(course.dir, lesson.name, repos = getOption("rep
     while(TRUE) {
       . <- try({
         p.buf$output[current.seq] %>%
-          sapply(function(.) {
-            paste(.[[target.name]], collapse = "\n")
+          lapply(function(.) {
+            .[[target.name]]
           }) %>%
-          paste(collapse = "\n") %>%
+          do.call(what = c) %>%
           search_selection(ans)
       }, silent = TRUE)
       if (class(.) != "try-error") {
