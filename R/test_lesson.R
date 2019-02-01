@@ -185,7 +185,7 @@ test_lesson_by_name <- function(){
 #'@importFrom magrittr extract
 #'@importFrom magrittr extract2
 #'@export
-test_course_by_agent <- function(course.dir, lesson.name, repos = getOption("repos"), answer.yaml = NULL) {
+test_lesson_by_agent <- function(course.dir, lesson.name, repos = getOption("repos"), answer.yaml = NULL) {
   .env <- Sys.getenv()
   .env[["R_LIBS"]] <- paste(.libPaths(), collapse = ":")
   for(category in c(
