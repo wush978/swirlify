@@ -285,6 +285,32 @@ test_course_by_agent <- function(course.dir, lesson.name, repos = getOption("rep
     }
   }
   
+  search_selection_from_p.buf <- function(index, is.stdout, ans) {
+    target.name <- ifelse(is.stdout, "stdout", "stderr")
+    current.seq <- seq(index, by = -1, length.out = 1)
+    while(TRUE) {
+      . <- try({
+        p.buf$output[current.seq] %>%
+          sapply(function(.) {
+            paste(.[[target.name]], collapse = "\n")
+          }) %>%
+          paste(collapse = "\n") %>%
+          search_selection(ans)
+      }, silent = TRUE)
+      if (class(.) != "try-error") {
+        return(.)
+      } else {
+        if (attr(., "condition")$message %>% as.integer() == 0) {
+          current.seq <- seq(index, by = -1, length.out = length(current.seq) + 1)
+          if (min(current.seq) == 0) break
+        } else {
+          break
+        }
+      }
+    }
+    stop(sprintf("Failed to `search_select(..., '%s')`", ans))
+  }
+  
   search_selection <- function(txt, ans) {
     for(char in c("\\", "(", ")", "^", "[", "]", "{", "}", ".", "$", "*", "+")) {
       ans <- gsub(char, sprintf("\\%s", char), ans, fixed = TRUE)
@@ -293,12 +319,7 @@ test_course_by_agent <- function(course.dir, lesson.name, repos = getOption("rep
       regmatches(x = txt) %>%
       Filter(f = function(.) length(.) == 2)
     if(length(.) != 1) {
-      cat("search_selection error:\n", file = stderr())
-      cat("\n\n==txt==\n\n", file = stderr())
-      cat(txt, sep = "\n", file = stderr())
-      cat("\n\n==ans==\n\n", file = stderr())
-      cat(ans, sep = "\n", file = stderr())
-      stop("")
+      stop(paste(length(.)))
     }
     .[[1]][2]
   }
@@ -353,13 +374,21 @@ test_course_by_agent <- function(course.dir, lesson.name, repos = getOption("rep
   
   enter_course <- function(name) {
     wait_until(function(.) any(grepl("帶我去 swirl 課程庫！", ., fixed = TRUE)), check.last = TRUE)
-    . <- search_output(function(.) any(grepl("帶我去 swirl 課程庫！", ., fixed = TRUE))) %>%
-      max()
-    search_selection(p.buf$output[[.]]$stdout, basename(course.dir)) %>%
-      enter_process(breakline = TRUE)
+    # . <- search_output(function(.) any(grepl("帶我去 swirl 課程庫！", ., fixed = TRUE))) %>%
+    #   max()
+    # search_selection(p.buf$output[[.]]$stdout, basename(course.dir)) %>%
+    #   enter_process(breakline = TRUE)
+    search_output(function(.) any(grepl("帶我去 swirl 課程庫！", ., fixed = TRUE))) %>%
+      max() %>%
+      search_selection_from_p.buf(TRUE, basename(course.dir)) %>%
+      enter_process(breakline =)
+    # . <- search_output(function(.) any(grepl(name, ., fixed = TRUE))) %>%
+    #   max()
+    # search_selection(p.buf$output[[.]]$stdout, name) %>%
+    #   enter_process(breakline = TRUE)
     . <- search_output(function(.) any(grepl(name, ., fixed = TRUE))) %>%
-      max()
-    search_selection(p.buf$output[[.]]$stdout, name) %>%
+      max() %>%
+      search_selection_from_p.buf(TRUE, name) %>%
       enter_process(breakline = TRUE)
     src <- system.file(file.path(course.dir, name, "lesson.yaml"), package = "swirl") %>%
       yaml::yaml.load_file()
@@ -389,10 +418,13 @@ test_course_by_agent <- function(course.dir, lesson.name, repos = getOption("rep
       } else if (src[[i]]$Class == "mult_question") {
         wait_until(function(.) any(grepl("Selection:", ., fixed = TRUE)), check.last = TRUE)
         ans <- src[[i]]$CorrectAnswer %>% as.character()
+        # . <- search_output(function(.) any(grepl("Selection:", ., fixed = TRUE))) %>%
+        #   max()
+        # . <- search_selection(p.buf$output[[.]]$stdout, ans)
         . <- search_output(function(.) any(grepl("Selection:", ., fixed = TRUE))) %>%
-          max()
-        . <- search_selection(p.buf$output[[.]]$stdout, ans)
-        enter_process(., breakline = TRUE)
+          max() %>%
+          search_selection_from_p.buf(TRUE, ans) %>%
+          enter_process(breakline = TRUE)
       } else {
         browser()
         stop()
