@@ -25,5 +25,7 @@ Roxygen: list(wrap = FALSE)
 Suggests:
     testthat,
     digest,
-    git2r
-RoxygenNote: 5.0.1
+    git2r,
+    rmarkdown,
+    whisker
+RoxygenNote: 6.1.1

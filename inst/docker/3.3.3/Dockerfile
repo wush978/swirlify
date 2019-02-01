@@ -15,5 +15,7 @@ RUN chown -R jenkins:jenkins /home/jenkins
 USER jenkins
 WORKDIR /home/jenkins
 VOLUME ["/home/jenkins/R-lib"]
-VOLUME ["/home/jenkins/course"]
+VOLUME ["/home/jenkins/pvm"]
+VOLUME ["/home/jenkins/swirl"]
 VOLUME ["/home/jenkins/swirlify"]
+VOLUME ["/home/jenkins/course"]

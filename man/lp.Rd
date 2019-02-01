@@ -17,4 +17,3 @@ Find the path to the \code{lesson.yaml} file you're working on.
 lp()
 }
 }
-

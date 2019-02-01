@@ -115,7 +115,6 @@ new_lesson <- function(lesson_name, course_name, open_lesson = TRUE) {
 #' Template for output without a question
 #'
 #' @param output Text that is displayed to the user.
-#' @importFrom whisker whisker.render
 #' @export
 #' @examples
 #' \dontrun{
@@ -129,7 +128,7 @@ new_lesson <- function(lesson_name, course_name, open_lesson = TRUE) {
 wq_message <- function(output = "put your text output here"){
   lesson_file_check()
   template <- "\n- Class: text\n  Output: {{{output}}}\n"
-  cat(whisker.render(template, list(output=output)),
+  cat(whisker::whisker.render(template, list(output=output)),
       file=getOption("swirlify_lesson_file_path"), append=TRUE)
   invisible() 
 }
@@ -143,7 +142,6 @@ wq_message <- function(output = "put your text output here"){
 #' user's choice. See \code{\link[swirl]{AnswerTests}}.
 #' @param hint A string that is printed to the console if the user answers this
 #' question incorrectly.
-#' @importFrom whisker whisker.render
 #' @export
 #' @examples
 #' \dontrun{
@@ -169,7 +167,7 @@ wq_multiple <- function(output = "ask the multiple choice question here",
   CorrectAnswer: {{{correct_answer}}}
   AnswerTests: {{{answer_tests}}}
   Hint: {{{hint}}}\n"
-  cat(whisker.render(template, list(output = output, answer_choices = answer_choices,
+  cat(whisker::whisker.render(template, list(output = output, answer_choices = answer_choices,
                                     correct_answer = correct_answer, answer_tests = answer_tests,
                                     hint = hint)),
       file=getOption("swirlify_lesson_file_path"), append=TRUE)
@@ -185,7 +183,6 @@ wq_multiple <- function(output = "ask the multiple choice question here",
 #' user's choice. See \code{\link[swirl]{AnswerTests}}.
 #' @param hint A string that is printed to the console if the user answers this
 #' question incorrectly.
-#' @importFrom whisker whisker.render
 #' @export
 #' @examples
 #' \dontrun{
@@ -207,7 +204,7 @@ wq_command <- function(output = "explain what the user must do here",
   CorrectAnswer: {{{correct_answer}}}
   AnswerTests: {{{answer_tests}}}
   Hint: {{{hint}}}\n"
-  cat(whisker.render(template, list(output = output, correct_answer = correct_answer,
+  cat(whisker::whisker.render(template, list(output = output, correct_answer = correct_answer,
                                     answer_tests = answer_tests, hint = hint)),
       file=getOption("swirlify_lesson_file_path"), append=TRUE)
   invisible()
@@ -223,7 +220,6 @@ wq_command <- function(output = "explain what the user must do here",
 #' @param script The name of the script template to be opened. This template
 #' should be in a directory called \code{scripts} located inside the lesson
 #' directory.
-#' @importFrom whisker whisker.render
 #' @export
 #' @examples
 #' \dontrun{
@@ -246,7 +242,7 @@ wq_script <- function(output = "explain what the user must do here",
   AnswerTests: {{{answer_tests}}}
   Hint: {{{hint}}}
   Script: {{{script}}}\n"
-  cat(whisker.render(template, list(output = output, answer_tests = answer_tests,
+  cat(whisker::whisker.render(template, list(output = output, answer_tests = answer_tests,
                                     script = script, hint = hint)),
       file=getOption("swirlify_lesson_file_path"), append=TRUE)
   invisible()
@@ -259,7 +255,6 @@ wq_script <- function(output = "explain what the user must do here",
 #' @param output Text that is displayed to the user.
 #' @param video_link A link to a url. Please make sure to use \code{http://} or
 #' \code{https://}.
-#' @importFrom whisker whisker.render
 #' @export
 #' @examples
 #' \dontrun{
@@ -281,7 +276,7 @@ wq_video <- function(output = "Would you like to watch a short video about ___?"
   template <- "\n- Class: video
   Output: {{{output}}}
   VideoLink: {{{video_link}}}\n"
-  cat(whisker.render(template, list(output = output, video_link = video_link)),
+  cat(whisker::whisker.render(template, list(output = output, video_link = video_link)),
       file=getOption("swirlify_lesson_file_path"), append=TRUE)
   invisible()
 }
@@ -294,7 +289,6 @@ wq_video <- function(output = "Would you like to watch a short video about ___?"
 #' @param figure_type Either \code{"new"} or \code{"add"}. \code{"new"} idicates
 #' that a new plot should be displayed, while \code{"add"} indicates that
 #' features are being added to a plot that is already displayed.
-#' @importFrom whisker whisker.render
 #' @export
 #' @examples
 #' \dontrun{
@@ -317,7 +311,7 @@ wq_figure <- function(output = "explain the figure here",
   Output: {{{output}}}
   Figure: {{{figure}}}
   FigureType: {{{figure_type}}}\n"
-  cat(whisker.render(template, list(output = output, figure = figure,
+  cat(whisker::whisker.render(template, list(output = output, figure = figure,
                                     figure_type = figure_type)),
       file=getOption("swirlify_lesson_file_path"), append=TRUE)
   invisible()
@@ -331,7 +325,6 @@ wq_figure <- function(output = "explain the figure here",
 #' user's choice. See \code{\link[swirl]{AnswerTests}}.
 #' @param hint A string that is printed to the console if the user answers this
 #' question incorrectly.
-#' @importFrom whisker whisker.render
 #' @export
 #' @examples
 #' \dontrun{
@@ -353,7 +346,7 @@ wq_numerical <- function(output = "explain the question here",
   CorrectAnswer: {{{correct_answer}}}
   AnswerTests: {{{answer_tests}}}
   Hint: {{{hint}}}\n"
-  cat(whisker.render(template, list(output = output,
+  cat(whisker::whisker.render(template, list(output = output,
                                     correct_answer = correct_answer,
                                     answer_tests = answer_tests,
                                     hint = hint)),
@@ -369,7 +362,6 @@ wq_numerical <- function(output = "explain the question here",
 #' user's choice. See \code{\link[swirl]{AnswerTests}}.
 #' @param hint A string that is printed to the console if the user answers this
 #' question incorrectly.
-#' @importFrom whisker whisker.render
 #' @export
 #' @examples
 #' \dontrun{
@@ -391,7 +383,7 @@ wq_text <- function(output = "explain the question here",
   CorrectAnswer: {{{correct_answer}}}
   AnswerTests: {{{answer_tests}}}
   Hint: {{{hint}}}\n"
-  cat(whisker.render(template, list(output = output, correct_answer = correct_answer,
+  cat(whisker::whisker.render(template, list(output = output, correct_answer = correct_answer,
                                     answer_tests = answer_tests, hint = hint)),
       file=getOption("swirlify_lesson_file_path"), append=TRUE)
   invisible()
@@ -609,7 +601,6 @@ ensure_file_ends_with_newline <- function(path){
   }
 }
 
-#' @importFrom whisker whisker.render
 #' @importFrom utils file.edit
 file_edit <- function(path){
   if(Sys.getenv("RSTUDIO") == "1"){

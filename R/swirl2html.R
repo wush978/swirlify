@@ -79,7 +79,6 @@ makemd.script <- function(unit) {
 #' be installed? Default is \code{TRUE}.
 #'
 #' @importFrom yaml yaml.load_file
-#' @importFrom rmarkdown render
 #' @importFrom swirl install_course_directory
 #' @importFrom utils browseURL
 #' @export

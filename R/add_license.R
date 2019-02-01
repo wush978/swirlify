@@ -23,7 +23,6 @@
 #' @param code_license Specify which open source software license you would like
 #' to use for the content of your course. This must be equal to one of the
 #' following: \code{"MIT"}, \code{"GPL3"}, \code{"CC0"}.
-#' @importFrom whisker whisker.render
 #' @export
 #' @examples
 #' \dontrun{
@@ -59,7 +58,7 @@ add_license <- function(author, year = format(Sys.Date(), "%Y"),
   }
   
   if(!open_source_content && !open_source_data && !open_source_code){
-    cat(whisker.render("All code and content contained within this course is
+    cat(whisker::whisker.render("All code and content contained within this course is
 Copyright {{{year}}} {{{author}}}. All rights reserved.", list(author=author,
                                                                year = year)),
         file = file.path(getOption("swirlify_course_dir_path"), "LICENSE.txt"))

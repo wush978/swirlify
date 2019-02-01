@@ -4,7 +4,8 @@
 \alias{wq_text}
 \title{Template for text question}
 \usage{
-wq_text(output = "explain the question here", correct_answer = "answer",
+wq_text(output = "explain the question here",
+  correct_answer = "answer",
   answer_tests = "omnitest(correctVal='answer')", hint = "hint")
 }
 \arguments{
@@ -32,4 +33,3 @@ wq_text("Where is the Johns Hopkins Bloomberg School of Public Health located?",
  "Baltimore", "omnitest(correctVal='Baltimore')", "North of Washington, south of Philadelphia.")
 }
 }
-
