@@ -390,7 +390,7 @@ test_lesson_by_agent <- function(course.dir, lesson.name, repos = getOption("rep
       max() %>%
       search_selection_from_p.buf(TRUE, name) %>%
       enter_process(breakline = TRUE)
-    src <- system.file(file.path(course.dir, name, "lesson.yaml"), package = "swirl") %>%
+    src <- file.path(course.dir, name, "lesson.yaml") %>%
       yaml::yaml.load_file()
     ans <- yaml::yaml.load_file(answer.yaml)
     wait_until(function(.) any(grepl("Your status has beed updated to tracking server", ., fixed = TRUE)), is.stdout = FALSE, check.last = TRUE)
