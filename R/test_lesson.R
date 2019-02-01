@@ -392,7 +392,7 @@ test_lesson_by_agent <- function(course.dir, lesson.name, repos = getOption("rep
       enter_process(breakline = TRUE)
     src <- file.path(course.dir, name, "lesson.yaml") %>%
       yaml::yaml.load_file()
-    ans <- yaml::yaml.load_file(answer.yaml)
+    if (is.null(answer.yaml)) ans <- list() else ans <- yaml::yaml.load_file(answer.yaml)
     wait_until(function(.) any(grepl("Your status has beed updated to tracking server", ., fixed = TRUE)), is.stdout = FALSE, check.last = TRUE)
     for(i in 2:length(src)) {
       if (src[[i]]$Class == "text") {
