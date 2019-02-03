@@ -1,0 +1,3 @@
+FROM rocker/r-ver:3.5.0
+MAINTAINER Wush Wu <wush978@gmail.com>
+

@@ -8,9 +8,9 @@ RUN echo "en_US.UTF-8 UTF-8" > /etc/locale.gen && \
   echo "" >> /etc/locale.gen && \
   locale-gen && \
   update-locale
-  
 ENV LC_ALL=zh_TW.UTF-8
-RUN useradd -u 110 -ms /bin/bash jenkins
+ARG JENKINS_UID
+RUN useradd -u $JENKINS_UID -ms /bin/bash jenkins
 RUN chown -R jenkins:jenkins /home/jenkins
 USER jenkins
 WORKDIR /home/jenkins
