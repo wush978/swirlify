@@ -4,6 +4,7 @@ TEST_COURSE <- Sys.getenv("TEST_COURSE")
 R_LIBS <- c(tempfile(), file.path("R-lib", R.version))
 lapply(R_LIBS, dir.create, recursive = TRUE, showWarnings = FALSE)
 .libPaths(new = R_LIBS)
+Sys.setenv(R_LIBS=paste(R_LIBS, collapse = ":"))
 
 utils::install.packages("remotes", repos = "http://cran.csie.ntu.edu.tw", lib = R_LIBS[1])
 utils::install.packages("pvm", repos = NULL, lib = R_LIBS[1])
