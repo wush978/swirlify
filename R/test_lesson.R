@@ -188,6 +188,7 @@ test_lesson_by_name <- function(){
 test_lesson_by_agent <- function(course.dir, lesson.name, repos = getOption("repos"), answer.yaml = NULL) {
   .env <- Sys.getenv()
   .env[["R_LIBS"]] <- paste(.libPaths(), collapse = ":")
+  .env[["R_LIBS_USERS"]] <- "" # for windows
   for(category in c(
     "LC_COLLATE", "LC_CTYPE",
     "LC_MONETARY", "LC_NUMERIC", "LC_TIME", "LC_MESSAGES",
