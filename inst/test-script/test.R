@@ -11,9 +11,9 @@ lapply(R_LIBS, dir.create, recursive = TRUE, showWarnings = FALSE)
 Sys.setenv("R_LIBS" = paste(R_LIBS, collapse = ":"))
 
 utils::install.packages("remotes", repos = "http://cran.csie.ntu.edu.tw", lib = R_LIBS[1])
-utils::install.packages("pvm", repos = NULL, lib = R_LIBS[1])
-pvm::import.packages(sprintf("https://raw.githubusercontent.com/wush978/pvm-list/master/dsr-%s.yml", package_version(R.version)), lib = R_LIBS[2])
-utils::install.packages("swirl", repos = NULL, lib = R_LIBS[1])
+utils::install.packages("pvm", repos = NULL, type = 'source', lib = R_LIBS[1])
+pvm::import.packages(sprintf("https://raw.githubusercontent.com/wush978/pvm-list/master/dsr-%s.yml", package_version(R.version)), lib = R_LIBS[2], repos = c(CRAN='http://cran.csie.ntu.edu.tw'))
+utils::install.packages("swirl", repos = NULL, type = 'source', lib = R_LIBS[1])
 
 R.date <- pvm::R.release.dates[R.version]
 
@@ -26,7 +26,7 @@ dir.create(R_USER_LIBS, showWarnings = FALSE, recursive = TRUE)
 repos <- c(CRAN = sprintf("https://cran.microsoft.com/snapshot/%s", R.date + 7))
 if (!suppressWarnings(require(subprocess))) install.packages("subprocess", repos = repos, lib = R_LIBS[2])
 if (!suppressWarnings(require(magrittr))) install.packages("magrittr", repos = repos, lib = R_LIBS[2])
-utils::install.packages("swirlify", repos = NULL, lib = R_LIBS[1])
+utils::install.packages("swirlify", repos = NULL, type = 'source', lib = R_LIBS[1])
 
 Sys.setenv("SWIRL_DEV"="TRUE")
 .libPaths(new = c(R_USER_LIBS, .libPaths()))
