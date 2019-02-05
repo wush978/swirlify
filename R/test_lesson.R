@@ -187,8 +187,8 @@ test_lesson_by_name <- function(){
 #'@export
 test_lesson_by_agent <- function(course.dir, lesson.name, repos = getOption("repos"), answer.yaml = NULL) {
   .env <- Sys.getenv()
-  .env[["R_LIBS"]] <- paste(.libPaths(), collapse = ":")
-  .env[["R_LIBS_USERS"]] <- "" # for windows
+  .env[["R_LIBS"]] <- paste(.libPaths(), collapse = .Platform$path.sep)
+  .env[["R_LIBS_USER"]] <- .env[["R_LIBS"]] # for windows
   for(category in c(
     "LC_COLLATE", "LC_CTYPE",
     "LC_MONETARY", "LC_NUMERIC", "LC_TIME", "LC_MESSAGES",
@@ -355,6 +355,10 @@ test_lesson_by_agent <- function(course.dir, lesson.name, repos = getOption("rep
   }
   
   enter_swirl <- function() {
+    capture.output(dput(.libPaths())) %>%
+      paste(., collapse = "") %>%
+      sprintf(fmt = ".libPaths(new = %s)") %>%
+      enter_process()
     enter_process(sprintf("options(repos=c(CRAN='%s'))\n", repos))
     enter_process("options(editor = function(...){}, browser = function(...){})\n")
     enter_process(". <- as.environment('package:utils')")
