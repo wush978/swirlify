@@ -8,7 +8,7 @@ if (Sys.info()["sysname"] == "Windows") {
 }
 lapply(R_LIBS, dir.create, recursive = TRUE, showWarnings = FALSE)
 .libPaths(new = R_LIBS)
-Sys.setenv("R_LIBS" = paste(R_LIBS, collapse = ":"))
+Sys.setenv("R_LIBS" = paste(R_LIBS, collapse = .Platform$file.sep))
 
 utils::install.packages("remotes", repos = "http://cran.csie.ntu.edu.tw", lib = R_LIBS[1])
 utils::install.packages("pvm", repos = NULL, type = 'source', lib = R_LIBS[1])
