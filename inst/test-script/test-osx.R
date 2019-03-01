@@ -8,6 +8,7 @@ Sys.setenv("R_LIBS" = paste(R_LIBS, collapse = .Platform$file.sep))
 
 utils::install.packages("remotes", repos = "http://cran.csie.ntu.edu.tw", lib = R_LIBS[1])
 utils::install.packages("pvm", repos = NULL, type = 'source', lib = R_LIBS[1])
+pvm::metamran.update()
 pvm::import.packages(sprintf("https://raw.githubusercontent.com/wush978/pvm-list/master/dsr-%s.yml", package_version(R.version)), lib = R_LIBS[2], repos = c(CRAN='http://cran.csie.ntu.edu.tw'))
 utils::install.packages("swirl", repos = NULL, type = 'source', lib = R_LIBS[1])
 
